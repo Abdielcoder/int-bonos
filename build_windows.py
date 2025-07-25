@@ -51,6 +51,34 @@ def install_dependencies():
 
 def create_spec_file():
     """Crea un archivo .spec optimizado para Windows"""
+    
+    # Lista de archivos que siempre deben incluirse
+    required_files = [
+        ('principal.py', '.'),
+        ('assets', 'assets'),
+        ('otp_dialog.py', '.'),
+        ('otp_service.py', '.'),
+        ('resegmentacion_db.py', '.'),
+        ('resegmentacion_details_dialog.py', '.'),
+    ]
+    
+    # Agregar archivos opcionales solo si existen
+    optional_files = [
+        ('resegmentaciones.db', '.'),
+    ]
+    
+    # Filtrar archivos que existen
+    datas_files = required_files.copy()
+    for file_path, dest in optional_files:
+        if Path(file_path).exists():
+            datas_files.append((file_path, dest))
+            print(f"[INFO] Incluyendo archivo opcional: {file_path}")
+        else:
+            print(f"[WARNING] Archivo no encontrado, omitiendo: {file_path}")
+    
+    # Crear la lista de datos como string
+    datas_str = ',\n        '.join([f"('{file_path}', '{dest}')" for file_path, dest in datas_files])
+    
     spec_content = '''# -*- mode: python ; coding: utf-8 -*-
 
 block_cipher = None
@@ -60,13 +88,7 @@ a = Analysis(
     pathex=[],
     binaries=[],
     datas=[
-        ('principal.py', '.'),
-        ('assets', 'assets'),
-        ('otp_dialog.py', '.'),
-        ('otp_service.py', '.'),
-        ('resegmentacion_db.py', '.'),
-        ('resegmentacion_details_dialog.py', '.'),
-        ('resegmentaciones.db', '.'),
+        ''' + datas_str + ''',
     ],
     hiddenimports=[
         'PySide6',
