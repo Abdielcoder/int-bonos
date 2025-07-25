@@ -25,9 +25,17 @@ jobs:
         python -m pip install --upgrade pip
         pip install PySide6 pyinstaller requests pandas openpyxl xlsxwriter
         
+    - name: List files
+      run: |
+        dir
+        echo "=== Python files ==="
+        dir *.py
+        
     - name: Build executable
       run: |
         python build_windows.py
+        echo "=== Build completed ==="
+        dir dist/
         
     - name: Upload executable
       uses: actions/upload-artifact@v4
@@ -54,5 +62,11 @@ jobs:
           1. Descarga el archivo `HerramientasBonos.exe`
           2. Ejecuta haciendo doble clic
           3. No requiere instalación de Python
+          
+          ### Detalles técnicos:
+          - Python 3.11
+          - PySide6 para GUI
+          - PyInstaller para empaquetado
+          - Compilado en Windows Server 2022
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
