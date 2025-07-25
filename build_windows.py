@@ -18,24 +18,24 @@ def install_dependencies():
     try:
         subprocess.run([sys.executable, "-m", "pip", "uninstall", "PyQt6", "-y"], 
                       capture_output=True, text=True)
-        print("✅ PyQt6 desinstalado para evitar conflictos")
+        print("[OK] PyQt6 desinstalado para evitar conflictos")
     except:
         pass
     
     # Instalar PySide6
     try:
         subprocess.run([sys.executable, "-m", "pip", "install", "PySide6"], check=True)
-        print("✅ PySide6 instalado")
+        print("[OK] PySide6 instalado")
     except subprocess.CalledProcessError:
-        print("❌ Error al instalar PySide6")
+        print("[ERROR] Error al instalar PySide6")
         return False
     
     # Instalar PyInstaller
     try:
         subprocess.run([sys.executable, "-m", "pip", "install", "pyinstaller"], check=True)
-        print("✅ PyInstaller instalado")
+        print("[OK] PyInstaller instalado")
     except subprocess.CalledProcessError:
-        print("❌ Error al instalar PyInstaller")
+        print("[ERROR] Error al instalar PyInstaller")
         return False
     
     # Instalar otras dependencias
@@ -43,7 +43,7 @@ def install_dependencies():
     for dep in dependencies:
         try:
             subprocess.run([sys.executable, "-m", "pip", "install", dep], check=True)
-            print(f"✅ {dep} instalado")
+            print(f"[OK] {dep} instalado")
         except subprocess.CalledProcessError:
             print(f"⚠️ Error al instalar {dep}")
     
@@ -153,11 +153,11 @@ exe = EXE(
     with open("herramientas_bonos_windows.spec", "w", encoding="utf-8") as f:
         f.write(spec_content)
     
-    print("✅ Archivo .spec creado para Windows")
+    print("[OK] Archivo .spec creado para Windows")
 
 def build_executable():
     """Construye el ejecutable usando el archivo .spec"""
-    print("🔨 Construyendo ejecutable para Windows...")
+    print("[BUILD] Construyendo ejecutable para Windows...")
     
     try:
         # Limpiar builds anteriores
@@ -182,20 +182,20 @@ def build_executable():
         # Verificar que se creó el .exe
         exe_path = Path("dist/HerramientasBonos.exe")
         if exe_path.exists():
-            print(f"✅ ¡Ejecutable creado exitosamente!")
-            print(f"📁 Ubicación: {exe_path.absolute()}")
+            print(f"[OK] ¡Ejecutable creado exitosamente!")
+            print(f"[INFO] Ubicación: {exe_path.absolute()}")
             
             # Mostrar tamaño
             size_mb = exe_path.stat().st_size / (1024 * 1024)
-            print(f"📊 Tamaño: {size_mb:.1f} MB")
+            print(f"[INFO] Tamaño: {size_mb:.1f} MB")
             
             return True
         else:
-            print("❌ El ejecutable no se creó correctamente")
+            print("[ERROR] El ejecutable no se creó correctamente")
             return False
             
     except subprocess.CalledProcessError as e:
-        print(f"❌ Error al construir el ejecutable:")
+        print(f"[ERROR] Error al construir el ejecutable:")
         print(f"   Código de salida: {e.returncode}")
         if e.stdout:
             print(f"   Salida: {e.stdout}")
@@ -204,12 +204,12 @@ def build_executable():
         return False
 
 def main():
-    print("🚀 Iniciando construcción para Windows")
+    print("[START] Iniciando construcción para Windows")
     print("=" * 50)
     
     # Verificar que estamos en Windows
     if platform.system() != "Windows":
-        print("❌ Este script solo funciona en Windows")
+        print("[ERROR] Este script solo funciona en Windows")
         sys.exit(1)
     
     # Instalar dependencias
@@ -221,14 +221,14 @@ def main():
     
     # Construir ejecutable
     if build_executable():
-        print("\n🎉 ¡Proceso completado exitosamente!")
-        print("\n📋 Instrucciones:")
+        print("\n[SUCCESS] ¡Proceso completado exitosamente!")
+        print("\n[INFO] Instrucciones:")
         print("   • El ejecutable está en: dist/HerramientasBonos.exe")
         print("   • Puedes ejecutarlo haciendo doble clic")
         print("   • Para distribuir, comparte el archivo .exe")
         print("   • No requiere instalación de Python en el sistema destino")
     else:
-        print("\n❌ El proceso falló")
+        print("\n[ERROR] El proceso falló")
         sys.exit(1)
 
 if __name__ == "__main__":
