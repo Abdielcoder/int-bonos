@@ -12,7 +12,7 @@ from pathlib import Path
 
 def install_dependencies():
     """Instala las dependencias necesarias"""
-    print("🔧 Instalando dependencias...")
+    print("[INSTALL] Instalando dependencias...")
     
     # Desinstalar PyQt6 si está presente para evitar conflictos
     try:
@@ -45,7 +45,7 @@ def install_dependencies():
             subprocess.run([sys.executable, "-m", "pip", "install", dep], check=True)
             print(f"[OK] {dep} instalado")
         except subprocess.CalledProcessError:
-            print(f"⚠️ Error al instalar {dep}")
+            print(f"[WARNING] Error al instalar {dep}")
     
     return True
 
