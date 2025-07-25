@@ -44,12 +44,12 @@ jobs:
         path: dist/HerramientasBonos.exe
         
     - name: Create release
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      if: startsWith(github.ref, 'refs/tags/')
       uses: softprops/action-gh-release@v1
       with:
         files: dist/HerramientasBonos.exe
-        tag_name: v${{ github.run_number }}
-        name: Release v${{ github.run_number }}
+        tag_name: ${{ github.ref_name }}
+        name: Release ${{ github.ref_name }}
         body: |
           ## Herramientas Bonos - Windows Executable
           
