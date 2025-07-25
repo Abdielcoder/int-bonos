@@ -1,0 +1,58 @@
+name: Build Windows Executable
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:  # Permite ejecución manual
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install PySide6 pyinstaller requests pandas openpyxl xlsxwriter
+        
+    - name: Build executable
+      run: |
+        python build_windows.py
+        
+    - name: Upload executable
+      uses: actions/upload-artifact@v4
+      with:
+        name: HerramientasBonos-Windows
+        path: dist/HerramientasBonos.exe
+        
+    - name: Create release
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      uses: softprops/action-gh-release@v1
+      with:
+        files: dist/HerramientasBonos.exe
+        tag_name: v${{ github.run_number }}
+        name: Release v${{ github.run_number }}
+        body: |
+          ## Herramientas Bonos - Windows Executable
+          
+          ### Cambios en esta versión:
+          - Compilado automáticamente desde GitHub Actions
+          - Compatible con Windows 10/11
+          - Incluye todas las dependencias
+          
+          ### Instrucciones:
+          1. Descarga el archivo `HerramientasBonos.exe`
+          2. Ejecuta haciendo doble clic
+          3. No requiere instalación de Python
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
